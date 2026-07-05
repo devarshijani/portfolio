@@ -1,34 +1,67 @@
+'use client';
+
+import { motion, useReducedMotion } from 'framer-motion';
+
 export default function Hero() {
+  const shouldReduceMotion = useReducedMotion();
+
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: shouldReduceMotion ? 0 : 0.08,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 },
+    visible: shouldReduceMotion
+      ? { opacity: 1, y: 0 }
+      : { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+  };
+
+  const buttonTap = shouldReduceMotion ? {} : { scale: 0.98 };
+
   return (
     <header className="hero" id="home">
       <div className="hero-grid-bg" aria-hidden="true"></div>
       <div className="wrap hero-inner">
-        <div>
-          <span className="status-chip">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.span className="status-chip" variants={itemVariants}>
             <span className="pulse"></span>
             2 platforms live in production
-          </span>
-          <h1>
-            Hi, I'm<br />
+          </motion.span>
+          <motion.h1 variants={itemVariants}>
+            Hi, I&apos;m<br />
             Devarshi <span className="amber">Jani</span>
-          </h1>
-          <p className="hero-tag">
+          </motion.h1>
+          <motion.p className="hero-tag" variants={itemVariants}>
             <b>Full-Stack Developer</b> — B.Tech AI &amp; Data Science &apos;27
-          </p>
-          <p className="hero-desc">
+          </motion.p>
+          <motion.p className="hero-desc" variants={itemVariants}>
             I build platforms that run in the real world — a B2B solar marketplace serving live users and a real-time ride-sharing system with sockets, maps, and OTP-secured trips. From schema design to deployment, I ship the whole stack.
-          </p>
-          <div className="hero-actions">
-            <a
+          </motion.p>
+          <motion.div className="hero-actions" variants={itemVariants}>
+            <motion.a
               className="btn btn-amber"
               href="/Devarshi_Jani_Resume.pdf"
               download="Devarshi_Jani_Resume.pdf"
+              whileTap={buttonTap}
             >
               Download CV
-            </a>
-            <a className="btn btn-ghost" href="#projects">
+            </motion.a>
+            <motion.a
+              className="btn btn-ghost"
+              href="#projects"
+              whileTap={buttonTap}
+            >
               See my work
-            </a>
+            </motion.a>
             <div className="socials">
               <a
                 href="https://github.com/devarshijani"
@@ -56,8 +89,8 @@ export default function Hero() {
                 </svg>
               </a>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* signature: live route drawing, pickup → sun */}
         <div className="route-visual" aria-hidden="true">
@@ -66,7 +99,17 @@ export default function Hero() {
               <path d="M30 90 H410 M30 190 H410 M30 290 H410" />
               <path d="M110 30 V370 M220 30 V370 M330 30 V370" />
             </g>
-            <path className="route-path" d="M60 330 C 120 330, 120 250, 180 250 S 250 170, 300 150 S 360 110, 380 80" />
+            <motion.path
+              className="route-path"
+              d="M60 330 C 120 330, 120 250, 180 250 S 250 170, 300 150 S 360 110, 380 80"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={
+                shouldReduceMotion
+                  ? { duration: 0 }
+                  : { duration: 3, ease: 'easeInOut', delay: 0.5 }
+              }
+            />
             <circle className="route-dot-a" cx="60" cy="330" r="7" />
             <circle cx="60" cy="330" r="13" fill="none" stroke="#3FD6C2" strokeOpacity=".4" />
             <text className="route-label" x="80" y="336">pickup — sarthi live tracking</text>

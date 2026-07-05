@@ -20,7 +20,7 @@
 
 ## ✦ About This Project
 
-This is my **personal developer portfolio** — a single-file, hand-crafted web experience built entirely from scratch with no frameworks, no build tools, and zero dependencies. Every pixel, animation, and interaction is intentionally designed to reflect how I approach software: **clean, performant, and production-ready**.
+This is my **personal developer portfolio** — a modern, performant web experience built with **Next.js (App Router)**, **Tailwind CSS (v4)**, and **Framer Motion**. Every pixel, animation, and interaction is intentionally designed to reflect how I approach software: **clean, modular, and production-ready**.
 
 > *"I measure my work by one thing — does it run reliably for real users?"*
 
@@ -32,9 +32,9 @@ This is my **personal developer portfolio** — a single-file, hand-crafted web 
 |:--|:--|
 | **Dark-first aesthetics** | Custom deep navy palette (`#0B1220`) with amber (`#F5A524`) and teal (`#3FD6C2`) accents |
 | **Typography system** | [Sora](https://fonts.google.com/specimen/Sora) for headings · [IBM Plex Sans](https://fonts.google.com/specimen/IBM+Plex+Sans) for body · [IBM Plex Mono](https://fonts.google.com/specimen/IBM+Plex+Mono) for code elements |
-| **Zero-dependency animations** | CSS `@keyframes` for the pulse beacon, SVG stroke-dashoffset for the route drawing, IntersectionObserver for scroll reveals |
-| **Accessibility** | `prefers-reduced-motion` support, semantic HTML5, ARIA labels, `:focus-visible` outlines, proper heading hierarchy |
-| **Performance** | Single HTML file · No JS frameworks · No build step · Loads in < 1s |
+| **Fluid animations** | Smooth entrance staggers, interactive scroll reveals, and SVG path drawing animations powered by **Framer Motion** |
+| **Accessibility** | `prefers-reduced-motion` support (via framer-motion hooks and media queries), semantic HTML5, ARIA labels, `:focus-visible` outlines, proper heading hierarchy |
+| **Performance** | Next.js code splitting, optimized Google Font loading, and clean component architecture |
 
 <br/>
 
@@ -42,18 +42,15 @@ This is my **personal developer portfolio** — a single-file, hand-crafted web 
 
 ```
 devarshi-portfolio/
-├── index.html                # The entire portfolio — HTML + CSS + JS in one file
-├── Devarshi_Jani_Resume.pdf  # Downloadable resume
+├── app/                      # Next.js App Router files (page.js, layout.js, globals.css)
+├── components/               # React components (Navbar.jsx, Hero.jsx, About.jsx, Skills.jsx, etc.)
+├── public/                   # Static assets (Devarshi_Jani_Resume.pdf, SVG icons)
 └── README.md                 # You are here
 ```
 
-### Why a single file?
-
-Simplicity is a feature. A single `index.html` means:
-- **⚡ Instant deployment** — drop it on any static host
-- **🔒 Zero supply chain risk** — no `node_modules`, no CVEs
-- **📦 Fully portable** — works offline, works anywhere
-- **🎯 Forces discipline** — every byte earns its place
+- **Modular Components** — structured sections kept focus-specific and highly reusable
+- **CSS Custom Variables** — design system tokens ported to `:root` and extended inside Tailwind `@theme` configuration
+- **Asset Serving** — static downloadable assets like `Devarshi_Jani_Resume.pdf` served cleanly from the `public/` directory
 
 <br/>
 
@@ -65,18 +62,19 @@ Simplicity is a feature. A single `index.html` means:
 
 ### 🏠 Hero
 - Animated grid background with CSS masks
-- SVG route visualization with stroke-dashoffset draw animation
+- Staggered mount animations for typography and CTA components
+- Real-time SVG route visualization drawn smoothly using Framer Motion pathLength properties
 - Pulsing "2 platforms live" status beacon
 - Responsive CTA buttons + social icon bar
 
 ### 👤 About
 - Personal narrative with journey timeline
-- Interactive value cards with hover elevations
-- Technology chip cloud
+- Monospace tech tag cloud
+- Value cards featuring interactive hover elevations (`whileHover={{ y: -3 }}`)
 
 ### 🛠️ Skills
-- Three-column grouped skill layout
-- Custom monospace icon glyphs
+- Three-column grouped tool layout
+- Custom monospace icon glyphs and inline SVGs
 - LeetCode stats strip with profile link (150+ problems)
 
 </td>
@@ -92,13 +90,13 @@ Simplicity is a feature. A single `index.html` means:
   - React · Node.js · MongoDB · Socket.io · Leaflet
 
 ### 📬 Contact
-- Contact information cards with icon system
-- Functional contact form → `mailto:` pre-filled draft
-- Zero backend required
+- Contact information cards with inline SVG system
+- Fully functional controlled email client integration using mailto query parameters
+- Tap micro-interactions (`whileTap={{ scale: 0.98 }}`) on submit action button
 
 ### 🦶 Footer
-- Auto-updating copyright year via JS
-- Social links mirror
+- Dynamic copyright year auto-updating via JS
+- Linked social mirrors
 
 </td>
 </tr>
@@ -110,10 +108,10 @@ Simplicity is a feature. A single `index.html` means:
 
 <div align="center">
 
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
-![SVG](https://img.shields.io/badge/SVG_Animations-FFB13B?style=flat-square&logo=svg&logoColor=black)
+![Next.js](https://img.shields.io/badge/Next.js_16-000000?style=flat-square&logo=nextdotjs&logoColor=white)
+![React 19](https://img.shields.io/badge/React_19-20232A?style=flat-square&logo=react&logoColor=61DAFB)
+![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS_v4-38B2AC?style=flat-square&logo=tailwindcss&logoColor=white)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=flat-square&logo=framer&logoColor=white)
 ![Google Fonts](https://img.shields.io/badge/Google_Fonts-4285F4?style=flat-square&logo=googlefonts&logoColor=white)
 
 </div>
@@ -125,14 +123,13 @@ Simplicity is a feature. A single `index.html` means:
 
 | Feature | How It Works |
 |:--|:--|
-| **Scroll Reveal** | `IntersectionObserver` with `threshold: 0.12` — elements fade-in and translate up when 12% visible |
-| **Route Animation** | SVG `<path>` with `stroke-dasharray: 640` + `stroke-dashoffset` animated to `0` via CSS keyframes |
-| **Pulse Beacon** | Pseudo-element `::after` with infinite scale + fade animation on the status chip |
-| **Mobile Menu** | Toggle `.open` class on nav links container; auto-close on link click |
-| **Contact Form** | Intercepts `submit`, constructs a `mailto:` URI with URL-encoded subject + body, opens default email client |
-| **Responsive Grid** | CSS Grid with `clamp()` typography and breakpoints at `900px` / `720px` |
-| **Dark Theme** | CSS custom properties (`--bg`, `--ink`, `--amber`, `--teal`) for consistent theming |
-| **Reduced Motion** | `@media (prefers-reduced-motion: reduce)` disables all animations and enables instant scroll |
+| **Scroll Reveal** | Framer Motion `<Reveal>` wrapper tracking `whileInView` with a threshold of `amount: 0.15` and custom spring eases |
+| **Route Animation** | SVG `<motion.path>` drawing itself using `pathLength: 0` to `1` over `3s` with a `0.5s` delay |
+| **Pulse Beacon** | CSS keyframe scale + opacity animations on the live status chip |
+| **Reduced Motion** | Native integration of `useReducedMotion()` hooks; immediately disables motion values for a static layout if OS preferences dictate |
+| **Mobile Menu** | React client-state toggle adding layout styles to the navigation links overlay |
+| **Contact Form** | Intercepts submits, cleans inputs, URL-encodes, and issues a structured mailto redirection |
+| **Responsive Grid** | Adaptive grid layouts reflowing smoothly at `900px` and `720px` breakpoints |
 
 </details>
 
@@ -144,11 +141,11 @@ Simplicity is a feature. A single `index.html` means:
 # Clone the repository
 git clone https://github.com/devarshijani/portfolio.git
 
-# Open in browser — no build step needed!
-cd portfolio
-start index.html        # Windows
-open index.html         # macOS
-xdg-open index.html     # Linux
+# Install dependencies
+npm install
+
+# Run the local Next.js development server
+npm run dev
 ```
 
 Or simply **[visit the live site →](https://devarshijani.github.io/portfolio/)**

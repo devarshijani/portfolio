@@ -756,6 +756,101 @@ footer {
   font-weight: 500;
 }
 
+/* ---------- experience ---------- */
+#experience {
+  background: var(--bg);
+}
+.timeline {
+  position: relative;
+  margin-top: 44px;
+  padding-left: 32px;
+}
+.timeline-line {
+  position: absolute;
+  left: 5px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: var(--teal);
+  opacity: 0.4;
+}
+.timeline-items {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+.timeline-item {
+  position: relative;
+}
+.timeline-dot {
+  position: absolute;
+  left: -32px;
+  top: 8px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--amber);
+  border: 2px solid var(--bg);
+}
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.timeline-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.timeline-company {
+  font-family: var(--mono);
+  color: var(--teal);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.timeline-role {
+  font-family: var(--display);
+  font-size: 1.22rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.timeline-date {
+  font-family: var(--mono);
+  color: var(--muted);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+.timeline-bullets {
+  list-style: none;
+  padding-left: 0;
+}
+.timeline-bullets li {
+  position: relative;
+  color: var(--muted);
+  font-size: 0.94rem;
+  margin-bottom: 10px;
+  padding-left: 18px;
+}
+.timeline-bullets li::before {
+  content: "–";
+  position: absolute;
+  left: 0;
+  color: var(--teal);
+}
+.timeline-bullets li:last-child {
+  margin-bottom: 0;
+}
+.timeline-link {
+  color: var(--teal);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.timeline-link:hover {
+  color: var(--amber);
+}
 
 /* ---------- responsive ---------- */
 @media (max-width: 900px) {
@@ -804,5 +899,12 @@ footer {
   }
   .frow {
     grid-template-columns: 1fr;
+  }
+  .timeline-header {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .timeline-date {
+    white-space: normal;
   }
 }

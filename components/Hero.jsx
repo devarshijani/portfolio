@@ -1,9 +1,26 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
 
 export default function Hero() {
   const shouldReduceMotion = useReducedMotion();
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+
+  const roles = [
+    "Full-Stack Developer",
+    "Backend Architect",
+    "Real-Time Systems Builder",
+    "Production-First Engineer"
+  ];
+
+  useEffect(() => {
+    if (shouldReduceMotion) return;
+    const interval = setInterval(() => {
+      setCurrentWordIndex((prev) => (prev + 1) % roles.length);
+    }, 2850); // 2.5s hold + 0.35s transition ~ 2.85s cycle
+    return () => clearInterval(interval);
+  }, [shouldReduceMotion]);
 
   const containerVariants = {
     hidden: {},
@@ -26,6 +43,11 @@ export default function Hero() {
   return (
     <header className="hero" id="home">
       <div className="hero-grid-bg" aria-hidden="true"></div>
+      
+      {/* Ambient background glow blobs */}
+      <div className="glow-blob-amber" aria-hidden="true"></div>
+      <div className="glow-blob-teal" aria-hidden="true"></div>
+
       <div className="wrap hero-inner">
         <motion.div
           variants={containerVariants}
@@ -40,12 +62,33 @@ export default function Hero() {
             Hi, I&apos;m<br />
             Devarshi <span className="amber">Jani</span>
           </motion.h1>
+          
           <motion.p className="hero-tag" variants={itemVariants}>
-            <b>Full-Stack Developer</b> — B.Tech AI &amp; Data Science &apos;27
+            {shouldReduceMotion ? (
+              <span className="hero-tag-static-role">Full-Stack Developer</span>
+            ) : (
+              <span className="hero-tag-rotating-word">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={currentWordIndex}
+                    initial={{ y: 15, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -15, opacity: 0 }}
+                    transition={{ duration: 0.35, ease: 'easeOut' }}
+                    className="hero-tag-role-span"
+                  >
+                    {roles[currentWordIndex]}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
+            )}
+            {' '}— B.Tech AI &amp; Data Science &apos;27
           </motion.p>
+
           <motion.p className="hero-desc" variants={itemVariants}>
             I build platforms that run in the real world — a B2B solar marketplace serving live users and a real-time ride-sharing system with sockets, maps, and OTP-secured trips. From schema design to deployment, I ship the whole stack.
           </motion.p>
+          
           <motion.div className="hero-actions" variants={itemVariants}>
             <motion.a
               className="btn btn-amber"
@@ -90,6 +133,24 @@ export default function Hero() {
               </a>
             </div>
           </motion.div>
+
+          {/* Stat strip */}
+          <motion.div className="hero-stats" variants={itemVariants}>
+            <div className="stat-item">
+              <span className="stat-num">02</span>
+              <span className="stat-label">platforms in production</span>
+            </div>
+            <div className="stat-divider" aria-hidden="true"></div>
+            <div className="stat-item">
+              <span className="stat-num">02</span>
+              <span className="stat-label">internships completed</span>
+            </div>
+            <div className="stat-divider" aria-hidden="true"></div>
+            <div className="stat-item">
+              <span className="stat-num">11</span>
+              <span className="stat-label">day hackathon build</span>
+            </div>
+          </motion.div>
         </motion.div>
 
         {/* signature: live route drawing, pickup → sun */}
@@ -130,6 +191,25 @@ export default function Hero() {
           </svg>
         </div>
       </div>
+
+      {/* Scroll indicator */}
+      {!shouldReduceMotion && (
+        <a href="#about" className="scroll-indicator" aria-label="Scroll to about section">
+          <span className="scroll-text">scroll</span>
+          <div className="scroll-line">
+            <motion.div
+              className="scroll-line-active"
+              animate={{ y: [-16, 24] }}
+              transition={{
+                duration: 1.8,
+                ease: 'easeInOut',
+                repeat: Infinity,
+                repeatDelay: 0.2,
+              }}
+            />
+          </div>
+        </a>
+      )}
     </header>
   );
 }

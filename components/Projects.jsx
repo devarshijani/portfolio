@@ -19,7 +19,7 @@ const projects = [
     title: "Sarthi",
     description:
       "A MERN ride-sharing platform with separate rider and driver portals. Features JWT-authenticated Socket.io channels, geospatial captain matching with MongoDB 2dsphere, real-time driver tracking on Leaflet maps, 6-digit OTP ride starts with rate lockout, and dynamic fares — hardened with Helmet.js security and express rate-limit.",
-    image: "/projects/sarthi.png",
+    image: "/projects/sarthi-new.png",
     technologies: ["React", "Node.js", "MongoDB", "Socket.io", "Leaflet", "GSAP"],
     liveUrl: "https://sarthi-pied.vercel.app/",
     githubUrl: "https://github.com/devarshijani/sarthi",

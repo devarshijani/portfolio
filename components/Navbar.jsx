@@ -64,19 +64,7 @@ export default function Navbar() {
                   </motion.a>
                 ))}
               </div>
-              <motion.a
-                href={resumeUrl}
-                download="Devarshi_Jani_Resume.pdf"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-1.5 px-4 py-2 border border-orange-400/40 text-orange-400 hover:text-white hover:bg-gradient-to-r hover:from-pink-500 hover:to-orange-400 hover:border-transparent text-sm lg:text-base rounded-full font-semibold transition-all duration-300 shadow-lg shadow-orange-400/10 cursor-pointer"
-              >
-                <ArrowDownToLine size={16} />
-                Resume
-              </motion.a>
+
             </div>
 
             {/* Mobile menu button */}

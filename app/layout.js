@@ -1,39 +1,60 @@
-import { Sora, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
+import { Analytics } from "@vercel/analytics/next";
 
-const sora = Sora({
-  variable: "--font-sora",
+// Configure Poppins font to match target design typography
+const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
-});
-
-const ibmSans = IBM_Plex_Sans({
-  variable: "--font-ibm-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
-
-const ibmMono = IBM_Plex_Mono({
-  variable: "--font-ibm-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata = {
   title: "Devarshi Jani | Full Stack Developer",
-  description: "Portfolio of Devarshi Jani — full-stack developer building production platforms with Next.js, Node.js, MongoDB and real-time systems. Creator of Solmarkt and Sarthi.",
+  description:
+    "Portfolio of Devarshi Jani — a passionate full stack developer showcasing projects, skills, and experience with modern web technologies, real-time systems, and databases.",
+  keywords: [
+    "Devarshi Jani",
+    "Full Stack Developer",
+    "Next.js Portfolio",
+    "JavaScript Developer",
+    "React Developer",
+    "Node.js Developer",
+    "Solmarkt",
+    "Sarthi"
+  ],
+  authors: [{ name: "Devarshi Jani", url: "https://github.com/devarshijani" }],
+  creator: "Devarshi Jani",
+  metadataBase: new URL("https://devarshijani.github.io/portfolio/"), // Fallback to GitHub Pages live domain
+  icons: {
+    icon: "/favicon.ico",
+  },
   openGraph: {
     title: "Devarshi Jani | Full Stack Developer",
-    description: "Full-stack developer shipping production platforms — B2B marketplaces, real-time ride-sharing, and more.",
+    description:
+      "Explore the portfolio of Devarshi Jani — full stack web developer skilled in React, Next.js, Node.js, Socket.io, and Firestore.",
+    url: "https://devarshijani.github.io/portfolio/",
+    siteName: "Devarshi Jani Portfolio",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Devarshi Jani Portfolio",
+      },
+    ],
     type: "website",
   },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${sora.variable} ${ibmSans.variable} ${ibmMono.variable}`}>
+    <html lang="en" className="scroll-smooth">
+      <body className={poppins.className}>
         {children}
+        <Analytics />
+        <Toaster position="top-right" />
       </body>
     </html>
   );

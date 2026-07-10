@@ -1,215 +1,193 @@
-'use client';
+"use client"
 
-import { useState, useEffect } from 'react';
-import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { ArrowDown, Github, Linkedin, Mail, ArrowRight, Award, Zap, Code } from "lucide-react"
+import { Button } from "@/components/ui/button"
+
+const roles = [
+  "Full-Stack Developer",
+  "Backend Architect",
+  "Real-Time Systems Builder",
+  "Production-First Engineer"
+]
 
 export default function Hero() {
-  const shouldReduceMotion = useReducedMotion();
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-
-  const roles = [
-    "Full-Stack Developer",
-    "Backend Architect",
-    "Real-Time Systems Builder",
-    "Production-First Engineer"
-  ];
+  const [currentRoleIndex, setCurrentRoleIndex] = useState(0)
+  const resumeUrl = process.env.NEXT_PUBLIC_CV || "/Devarshi_Jani_Resume.pdf"
+  const githubUrl = process.env.NEXT_PUBLIC_GITHUB || "https://github.com/devarshijani"
+  const linkedinUrl = process.env.NEXT_PUBLIC_LINKEDIN || "https://www.linkedin.com/in/devarshi-jani-7074b52a0/"
+  const emailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${process.env.NEXT_PUBLIC_EMAIL || "janidevarshi8@gmail.com"}`
 
   useEffect(() => {
-    if (shouldReduceMotion) return;
     const interval = setInterval(() => {
-      setCurrentWordIndex((prev) => (prev + 1) % roles.length);
-    }, 2850); // 2.5s hold + 0.35s transition ~ 2.85s cycle
-    return () => clearInterval(interval);
-  }, [shouldReduceMotion]);
-
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: shouldReduceMotion ? 0 : 0.08,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 },
-    visible: shouldReduceMotion
-      ? { opacity: 1, y: 0 }
-      : { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
-  };
-
-  const buttonTap = shouldReduceMotion ? {} : { scale: 0.98 };
+      setCurrentRoleIndex((prev) => (prev + 1) % roles.length)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
-    <header className="hero" id="home">
-      <div className="hero-grid-bg" aria-hidden="true"></div>
-      
-      {/* Ambient background glow blobs */}
-      <div className="glow-blob-amber" aria-hidden="true"></div>
-      <div className="glow-blob-teal" aria-hidden="true"></div>
-
-      <div className="wrap hero-inner">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.span className="status-chip" variants={itemVariants}>
-            <span className="pulse"></span>
-            2 platforms live in production
-          </motion.span>
-          <motion.h1 variants={itemVariants}>
-            Hi, I&apos;m<br />
-            Devarshi <span className="amber">Jani</span>
-          </motion.h1>
-          
-          <motion.p className="hero-tag" variants={itemVariants}>
-            {shouldReduceMotion ? (
-              <span className="hero-tag-static-role">Full-Stack Developer</span>
-            ) : (
-              <span className="hero-tag-rotating-word">
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={currentWordIndex}
-                    initial={{ y: 15, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -15, opacity: 0 }}
-                    transition={{ duration: 0.35, ease: 'easeOut' }}
-                    className="hero-tag-role-span"
-                  >
-                    {roles[currentWordIndex]}
-                  </motion.span>
-                </AnimatePresence>
-              </span>
-            )}
-            {' '}— B.Tech AI &amp; Data Science &apos;27
-          </motion.p>
-
-          <motion.p className="hero-desc" variants={itemVariants}>
-            I build platforms that run in the real world — a B2B solar marketplace serving live users and a real-time ride-sharing system with sockets, maps, and OTP-secured trips. From schema design to deployment, I ship the whole stack.
-          </motion.p>
-          
-          <motion.div className="hero-actions" variants={itemVariants}>
-            <motion.a
-              className="btn btn-amber"
-              href="/Devarshi_Jani_Resume.pdf"
-              download="Devarshi_Jani_Resume.pdf"
-              whileTap={buttonTap}
-            >
-              Download CV
-            </motion.a>
-            <motion.a
-              className="btn btn-ghost"
-              href="#projects"
-              whileTap={buttonTap}
-            >
-              See my work
-            </motion.a>
-            <div className="socials">
-              <a
-                href="https://github.com/devarshijani"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-              >
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-2.17c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.53-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.17 1.18a10.9 10.9 0 0 1 5.77 0c2.2-1.49 3.16-1.18 3.16-1.18.63 1.59.24 2.76.12 3.05.74.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.26 5.68.41.35.78 1.05.78 2.12v3.14c0 .31.21.67.8.55A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z" />
-                </svg>
-              </a>
-              <a
-                href="https://www.linkedin.com/in/devarshi-jani-7074b52a0/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-              >
-                <svg viewBox="0 0 24 24">
-                  <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5ZM.22 8.16h4.56V23H.22V8.16Zm7.44 0h4.37v2.02h.06c.61-1.15 2.1-2.37 4.32-2.37 4.62 0 5.47 3.04 5.47 6.99V23h-4.55v-7.21c0-1.72-.03-3.93-2.4-3.93-2.4 0-2.77 1.87-2.77 3.8V23H7.66V8.16Z" />
-                </svg>
-              </a>
-              <a href="mailto:janidevarshi8@gmail.com" aria-label="Email">
-                <svg viewBox="0 0 24 24">
-                  <path d="M2 4h20a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm10 8.35L3.6 6h16.8L12 12.35ZM3 8.24V18h18V8.24l-9 6.53-9-6.53Z" />
-                </svg>
-              </a>
-            </div>
-          </motion.div>
-
-          {/* Stat strip */}
-          <motion.div className="hero-stats" variants={itemVariants}>
-            <div className="stat-item">
-              <span className="stat-num">02</span>
-              <span className="stat-label">platforms in production</span>
-            </div>
-            <div className="stat-divider" aria-hidden="true"></div>
-            <div className="stat-item">
-              <span className="stat-num">02</span>
-              <span className="stat-label">internships completed</span>
-            </div>
-            <div className="stat-divider" aria-hidden="true"></div>
-            <div className="stat-item">
-              <span className="stat-num">11</span>
-              <span className="stat-label">day hackathon build</span>
-            </div>
-          </motion.div>
-        </motion.div>
-
-        {/* signature: live route drawing, pickup → sun */}
-        <div className="route-visual" aria-hidden="true">
-          <svg viewBox="0 0 440 400" xmlns="http://www.w3.org/2000/svg">
-            <g opacity=".35" stroke="#22304F" strokeWidth="1">
-              <path d="M30 90 H410 M30 190 H410 M30 290 H410" />
-              <path d="M110 30 V370 M220 30 V370 M330 30 V370" />
-            </g>
-            <motion.path
-              className="route-path"
-              d="M60 330 C 120 330, 120 250, 180 250 S 250 170, 300 150 S 360 110, 380 80"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={
-                shouldReduceMotion
-                  ? { duration: 0 }
-                  : { duration: 3, ease: 'easeInOut', delay: 0.5 }
-              }
-            />
-            <circle className="route-dot-a" cx="60" cy="330" r="7" />
-            <circle cx="60" cy="330" r="13" fill="none" stroke="#3FD6C2" strokeOpacity=".4" />
-            <text className="route-label" x="80" y="336">pickup — sarthi live tracking</text>
-            <g transform="translate(380 80)">
-              <circle className="route-dot-b" r="12" />
-              <g className="sun-rays">
-                <line x1="0" y1="-20" x2="0" y2="-27" />
-                <line x1="0" y1="20" x2="0" y2="27" />
-                <line x1="-20" y1="0" x2="-27" y2="0" />
-                <line x1="20" y1="0" x2="27" y2="0" />
-                <line x1="14" y1="-14" x2="19" y2="-19" />
-                <line x1="-14" y1="14" x2="-19" y2="19" />
-                <line x1="14" y1="14" x2="19" y2="19" />
-                <line x1="-14" y1="-14" x2="-19" y2="-19" />
-              </g>
-            </g>
-            <text className="route-label" x="255" y="55">solmarkt — solar b2b</text>
-          </svg>
-        </div>
+    <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden px-4 py-20 md:py-28">
+      {/* Background Floating Animation Blobs */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl float-animation"></div>
+        <div
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl float-animation"
+          style={{ animationDelay: "2s" }}
+        ></div>
       </div>
 
-      {/* Scroll indicator */}
-      {!shouldReduceMotion && (
-        <a href="#about" className="scroll-indicator" aria-label="Scroll to about section">
-          <span className="scroll-text">scroll</span>
-          <div className="scroll-line">
-            <motion.div
-              className="scroll-line-active"
-              animate={{ y: [-16, 24] }}
-              transition={{
-                duration: 1.8,
-                ease: 'easeInOut',
-                repeat: Infinity,
-                repeatDelay: 0.2,
-              }}
-            />
-          </div>
-        </a>
-      )}
-    </header>
-  );
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 w-full">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="flex flex-col items-center"
+        >
+          {/* Status Beacon */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1, duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 glass rounded-full text-sm text-green-400 mb-8 border-green-500/20"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            <span>2 platforms live in production</span>
+          </motion.div>
+
+          {/* Heading */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+            className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 md:mb-6 text-center tracking-tight"
+          >
+            Hi, I'm <span className="gradient-text">Devarshi Jani</span>
+          </motion.h1>
+
+          {/* Rotating Role */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white text-center mb-6 h-10 flex items-center justify-center"
+          >
+            <span className="text-gray-400 mr-2 font-medium">I'm a</span>
+            <span className="gradient-text font-black min-w-[280px] text-left sm:text-center inline-block">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={currentRoleIndex}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -20, opacity: 0 }}
+                  transition={{ duration: 0.35, ease: "easeOut" }}
+                >
+                  {roles[currentRoleIndex]}
+                </motion.span>
+              </AnimatePresence>
+            </span>
+          </motion.div>
+
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+            className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 max-w-3xl mx-auto text-center leading-relaxed"
+          >
+            I build platforms that run in the real world — a B2B solar marketplace serving live users and a real-time ride-sharing system with sockets, maps, and OTP-secured trips. From schema design to deployment, I ship the whole stack.
+          </motion.p>
+
+          {/* Call to Actions */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7, duration: 0.8 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12 w-full sm:w-auto"
+          >
+            <Button
+              asChild
+              size="lg"
+              className="bg-gradient-to-r from-pink-500 to-orange-400 hover:from-pink-600 hover:to-orange-500 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 hover-lift pulse-glow w-full sm:w-auto"
+            >
+              <a href="#projects">
+                See My Work
+                <ArrowRight size={18} className="ml-2" />
+              </a>
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => window.open(resumeUrl, "_blank")}
+              className="border-gray-600 text-gray-300 hover:text-white hover:border-white px-8 py-3 rounded-full font-semibold transition-all duration-300 hover-lift w-full sm:w-auto cursor-pointer"
+            >
+              Download CV
+            </Button>
+          </motion.div>
+
+          {/* Stats Cards Row */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+            className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl w-full mb-16"
+          >
+            {[
+              { num: "02", label: "Platforms in production", icon: Zap },
+              { num: "02", label: "Internships completed", icon: Award },
+              { num: "11", label: "Day hackathon build", icon: Code },
+            ].map((stat, i) => (
+              <div key={i} className="glass p-5 rounded-2xl flex flex-col items-center hover-lift border border-white/5 shadow-lg">
+                <stat.icon className="text-orange-400 w-5 h-5 mb-2 opacity-80" />
+                <span className="text-3xl font-extrabold gradient-text tracking-tight">{stat.num}</span>
+                <span className="text-sm text-gray-400 text-center mt-1">{stat.label}</span>
+              </div>
+            ))}
+          </motion.div>
+
+          {/* Socials Row */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9, duration: 0.8 }}
+            className="flex justify-center space-x-4 sm:space-x-6"
+          >
+            {[
+              { icon: Github, href: githubUrl, label: "GitHub" },
+              { icon: Linkedin, href: linkedinUrl, label: "LinkedIn" },
+              { icon: Mail, href: emailUrl, label: "Email" },
+            ].map((social, index) => (
+              <motion.a
+                key={index}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.2, rotate: 5 }}
+                whileTap={{ scale: 0.9 }}
+                className="p-3 glass rounded-full hover:bg-white/10 transition-all duration-300 text-gray-300 hover:text-white"
+                aria-label={social.label}
+              >
+                <social.icon className="w-5 h-5 sm:w-6 sm:h-6" />
+              </motion.a>
+            ))}
+          </motion.div>
+
+          {/* Scroll Down Indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.1, duration: 0.8 }}
+            className="mt-16"
+          >
+            <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}>
+              <ArrowDown size={24} className="text-gray-400" />
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  )
 }

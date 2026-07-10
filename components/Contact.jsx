@@ -1,122 +1,265 @@
-'use client';
+"use client"
 
-import { motion, useReducedMotion } from 'framer-motion';
-import Reveal from './Reveal';
+import { motion } from "framer-motion"
+import { Mail, Phone, MapPin, Send } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import toast from "react-hot-toast"
 
 export default function Contact() {
-  const shouldReduceMotion = useReducedMotion();
+  const contactEmail = process.env.NEXT_PUBLIC_EMAIL || "janidevarshi8@gmail.com"
+  const contactPhone = process.env.NEXT_PUBLIC_PHONE || "+91 91068 84503"
+  const contactLocation = process.env.NEXT_PUBLIC_LOCATION || "Surat, Gujarat, India"
 
-  const tapAnimation = shouldReduceMotion ? {} : { scale: 0.98 };
+  const contactInfo = [
+    {
+      icon: Mail,
+      title: "Email",
+      value: contactEmail,
+      href: `mailto:${contactEmail}`,
+    },
+    {
+      icon: Phone,
+      title: "Phone",
+      value: contactPhone,
+      href: `tel:${contactPhone.replace(/\s+/g, "")}`,
+    },
+    {
+      icon: MapPin,
+      title: "Location",
+      value: contactLocation,
+      href: `https://maps.google.com/?q=${encodeURIComponent(contactLocation)}`,
+    },
+  ]
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const fname = (formData.get('fname') || '').trim();
-    const lname = (formData.get('lname') || '').trim();
-    const femail = (formData.get('femail') || '').trim();
-    const fsubject = (formData.get('fsubject') || '').trim();
-    const fmsg = (formData.get('fmsg') || '').trim();
+  const handleSubmit = async (e) => {
+    e.preventDefault()
 
-    const subject = encodeURIComponent(fsubject || 'Hello from your portfolio');
+    const formData = new FormData(e.target)
+    const data = {
+      firstName: formData.get("firstName")?.trim(),
+      lastName: formData.get("lastName")?.trim() || "",
+      email: formData.get("email")?.trim(),
+      message: formData.get("message")?.trim(),
+      subject: formData.get("subject")?.trim(),
+    }
+
+    if (!data.firstName || !data.email || !data.message || !data.subject) {
+      toast.error("Please fill in all required fields")
+      return
+    }
+
+    if (!/\S+@\S+\.\S+/.test(data.email)) {
+      toast.error("Please enter a valid email address")
+      return
+    }
+
+    const toastId = toast.loading("Sending message...")
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+
+      if (res.ok) {
+        toast.success("Message sent successfully!", { id: toastId })
+        e.target.reset()
+      } else {
+        // Fallback to mailto if API endpoint fails (e.g. SMTP config missing)
+        toast.dismiss(toastId)
+        triggerMailtoRedirect(data)
+      }
+    } catch (err) {
+      toast.dismiss(toastId)
+      triggerMailtoRedirect(data)
+    }
+  }
+
+  const triggerMailtoRedirect = (data) => {
+    toast.success("Opening your local email client...")
+    const subject = encodeURIComponent(data.subject)
     const body = encodeURIComponent(
-      `Hi Devarshi,\n\n${fmsg}\n\n— ${fname} ${lname}\n${femail}`
-    );
-    window.location.href = `mailto:janidevarshi8@gmail.com?subject=${subject}&body=${body}`;
-  };
+      `Hi Devarshi,\n\n${data.message}\n\n— ${data.firstName} ${data.lastName}\nSender Email: ${data.email}`
+    )
+    window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${body}`
+  }
 
   return (
-    <section id="contact">
-      <div className="wrap">
-        <Reveal>
-          <p className="eyebrow">Get in touch</p>
-        </Reveal>
-        <Reveal>
-          <h2>Let&apos;s build something that ships</h2>
-        </Reveal>
-        <Reveal>
-          <p className="section-sub">
-            Open to internships, freelance work, and interesting problems. I reply fast.
+    <section id="contact" className="py-20 w-full bg-gray-900/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Get In <span className="gradient-text">Touch</span>
+          </h2>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Ready to start your next project? Let's work together to create something amazing.
           </p>
-        </Reveal>
+        </motion.div>
 
-        <div className="contact-grid">
-          <Reveal>
-            <div>
-              <div className="cinfo-item">
-                <span className="cicon">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M2 4h20a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm10 8.35L3.6 6h16.8L12 12.35ZM3 8.24V18h18V8.24l-9 6.53-9-6.53Z" />
-                  </svg>
-                </span>
-                <div>
-                  <small>Email</small>
-                  <a href="mailto:janidevarshi8@gmail.com">janidevarshi8@gmail.com</a>
+        <div className="grid lg:grid-cols-2 gap-12">
+          {/* Info cards */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <div className="glass p-8 rounded-2xl h-full flex flex-col justify-between border border-white/5 shadow-xl">
+              <div>
+                <h3 className="text-2xl font-bold mb-8">Let's Connect</h3>
+
+                <div className="space-y-6 mb-8">
+                  {contactInfo.map((info, index) => (
+                    <motion.a
+                      key={info.title}
+                      href={info.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1, duration: 0.6 }}
+                      viewport={{ once: true }}
+                      whileHover={{ scale: 1.02 }}
+                      className="flex items-center space-x-4 p-4 rounded-xl hover:bg-white/5 transition-colors duration-300 group cursor-pointer"
+                    >
+                      <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg group-hover:scale-110 transition-transform duration-300 text-white flex-shrink-0">
+                        <info.icon size={20} />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-400 font-medium">{info.title}</p>
+                        <p className="font-semibold text-white group-hover:text-orange-400 transition-colors duration-200">{info.value}</p>
+                      </div>
+                    </motion.a>
+                  ))}
                 </div>
               </div>
-              <div className="cinfo-item">
-                <span className="cicon">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.61 21 3 13.39 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.24.2 2.45.57 3.57a1 1 0 0 1-.25 1.02l-2.2 2.2Z" />
-                  </svg>
-                </span>
-                <div>
-                  <small>Phone</small>
-                  <a href="tel:+919106884503">+91 91068 84503</a>
-                </div>
+
+              <div className="border-t border-white/10 pt-8 mt-4">
+                <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
+                  I'm always interested in hearing about new opportunities, internships, and full-stack development projects. Whether you have a specific role or just want to say hi, my inbox is open!
+                </p>
               </div>
-              <div className="cinfo-item">
-                <span className="cicon">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7Zm0 9.5A2.5 2.5 0 1 0 12 6.5a2.5 2.5 0 0 0 0 5Z" />
-                  </svg>
-                </span>
-                <div>
-                  <small>Location</small>
-                  <p>Surat, Gujarat, India</p>
-                </div>
-              </div>
-              <p className="contact-note">
-                Whether it&apos;s a role, a project, or a question about how something on this page was built — my inbox is open.
-              </p>
             </div>
-          </Reveal>
+          </motion.div>
 
-          <Reveal>
-            <form id="contactForm" onSubmit={handleSubmit}>
-              <div className="frow">
-                <div className="fgroup">
-                  <label htmlFor="fname">First name</label>
-                  <input id="fname" name="fname" type="text" required />
-                </div>
-                <div className="fgroup">
-                  <label htmlFor="lname">Last name</label>
-                  <input id="lname" name="lname" type="text" />
-                </div>
+          {/* Form container */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <form onSubmit={handleSubmit} className="glass p-8 rounded-2xl space-y-6 border border-white/5 shadow-xl">
+              <div className="grid md:grid-cols-2 gap-6">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1, duration: 0.6 }}
+                  viewport={{ once: true }}
+                >
+                  <label className="block text-sm font-semibold mb-2 text-gray-300">First Name *</label>
+                  <Input
+                    type="text"
+                    name="firstName"
+                    placeholder="Devarshi"
+                    required
+                    className="bg-white/5 border-gray-600 focus:border-orange-400 text-white rounded-lg px-4 py-2"
+                  />
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.6 }}
+                  viewport={{ once: true }}
+                >
+                  <label className="block text-sm font-semibold mb-2 text-gray-300">Last Name</label>
+                  <Input
+                    name="lastName"
+                    type="text"
+                    placeholder="Jani"
+                    className="bg-white/5 border-gray-600 focus:border-orange-400 text-white rounded-lg px-4 py-2"
+                  />
+                </motion.div>
               </div>
-              <div className="fgroup">
-                <label htmlFor="femail">Your email</label>
-                <input id="femail" name="femail" type="email" required />
-              </div>
-              <div className="fgroup">
-                <label htmlFor="fsubject">Subject</label>
-                <input id="fsubject" name="fsubject" type="text" required />
-              </div>
-              <div className="fgroup">
-                <label htmlFor="fmsg">Message</label>
-                <textarea id="fmsg" name="fmsg" required></textarea>
-              </div>
-              <motion.button
-                className="btn btn-amber"
-                type="submit"
-                whileTap={tapAnimation}
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+                viewport={{ once: true }}
               >
-                Send message
-              </motion.button>
-              <p className="form-hint">Opens your email app with the message pre-filled.</p>
+                <label className="block text-sm font-semibold mb-2 text-gray-300">Email *</label>
+                <Input
+                  name="email"
+                  type="email"
+                  placeholder="devarshi@example.com"
+                  required
+                  className="bg-white/5 border-gray-600 focus:border-orange-400 text-white rounded-lg px-4 py-2"
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <label className="block text-sm font-semibold mb-2 text-gray-300">Subject *</label>
+                <Input
+                  name="subject"
+                  type="text"
+                  placeholder="Project Collaboration"
+                  required
+                  className="bg-white/5 border-gray-600 focus:border-orange-400 text-white rounded-lg px-4 py-2"
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <label className="block text-sm font-semibold mb-2 text-gray-300">Message *</label>
+                <Textarea
+                  name="message"  
+                  placeholder="Let's build something that ships..."
+                  rows={5}
+                  required
+                  className="bg-white/5 border-gray-600 focus:border-orange-400 text-white rounded-lg resize-none px-4 py-2"
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full bg-gradient-to-r from-pink-500 to-orange-400 hover:from-pink-600 hover:to-orange-500 text-white rounded-lg font-bold transition-all duration-300 hover-lift pulse-glow cursor-pointer border-transparent"
+                >
+                  <Send size={20} className="mr-2" />
+                  Send Message
+                </Button>
+              </motion.div>
             </form>
-          </Reveal>
+          </motion.div>
         </div>
       </div>
     </section>
-  );
+  )
 }

@@ -4,12 +4,27 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowDown, Github, Linkedin, Mail, ArrowRight, Award, Zap, Code } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 
 const roles = [
   "Full-Stack Developer",
   "Backend Architect",
   "Real-Time Systems Builder",
   "Production-First Engineer"
+]
+
+const tickerSkills = [
+  { name: "React", logo: "/logos/react.png" },
+  { name: "Next.js", logo: "/logos/next.png" },
+  { name: "Node.js", logo: "/logos/node.png" },
+  { name: "PostgreSQL", logo: "/logos/sql.png" },
+  { name: "MongoDB", logo: "/logos/mongodb.png" },
+  { name: "Docker", logo: "/logos/docker.png" },
+  { name: "JavaScript", logo: "/logos/javascript.png" },
+  { name: "Python", logo: "/logos/python.png" },
+  { name: "n8n", logo: "/logos/n8n.png" },
+  { name: "Git", logo: "/logos/git.png" },
+  { name: "Vercel", logo: "/logos/vercel.png" }
 ]
 
 export default function Hero() {
@@ -128,24 +143,36 @@ export default function Hero() {
             </Button>
           </motion.div>
 
-          {/* Stats Cards Row */}
+          {/* Tech Stack Marquee Row */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.8 }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl w-full mb-16"
+            className="w-full max-w-4xl relative overflow-hidden mb-16 py-4 pause-hover"
           >
-            {[
-              { num: "02", label: "Platforms in production", icon: Zap },
-              { num: "02", label: "Internships completed", icon: Award },
-              { num: "11", label: "Day hackathon build", icon: Code },
-            ].map((stat, i) => (
-              <div key={i} className="glass p-5 rounded-2xl flex flex-col items-center hover-lift border border-white/5 shadow-lg">
-                <stat.icon className="text-orange-400 w-5 h-5 mb-2 opacity-80" />
-                <span className="text-3xl font-extrabold gradient-text tracking-tight">{stat.num}</span>
-                <span className="text-sm text-gray-400 text-center mt-1">{stat.label}</span>
-              </div>
-            ))}
+            {/* Left and Right Fade Overlays */}
+            <div className="absolute top-0 bottom-0 left-0 w-16 md:w-24 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+            <div className="absolute top-0 bottom-0 right-0 w-16 md:w-24 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+
+            <div className="animate-marquee flex gap-6">
+              {[...tickerSkills, ...tickerSkills, ...tickerSkills].map((skill, i) => (
+                <div
+                  key={i}
+                  className="glass px-5 py-2.5 rounded-full flex items-center gap-3 hover-lift border border-white/5 shadow-md flex-shrink-0 cursor-pointer"
+                >
+                  <Image
+                    src={skill.logo}
+                    alt={`${skill.name} logo`}
+                    width={20}
+                    height={20}
+                    className="object-contain rounded-sm"
+                  />
+                  <span className="text-sm font-medium text-gray-200 hover:text-white transition-colors duration-200">
+                    {skill.name}
+                  </span>
+                </div>
+              ))}
+            </div>
           </motion.div>
 
           {/* Socials Row */}

@@ -98,3 +98,22 @@ body {
 .pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
 }
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.3333%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite;
+}
+
+.pause-hover:hover .animate-marquee {
+  animation-play-state: paused;
+}
